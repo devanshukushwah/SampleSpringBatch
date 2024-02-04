@@ -4,16 +4,20 @@ import com.dev.app.model.EmailContent;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.springframework.batch.core.annotation.BeforeJob;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 
+
+
 public class EmailReader implements ItemReader<List<EmailContent>> {
 
     private List<List<EmailContent>> list;
+
+    public String emailType;
 
     @Override
     public synchronized List<EmailContent> read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
@@ -26,7 +30,11 @@ public class EmailReader implements ItemReader<List<EmailContent>> {
 
 
     @BeforeStep
-    public void preReq(){
+    public void preReq(StepExecution stepExecution){
+        String emailType = stepExecution.getJobParameters().getString("emailType");
+
+
+        System.out.println(emailType);
         List<EmailContent> emails = new ArrayList<>();
 
         emails.add(EmailContent.builder().primaryKey(1).emailAddress("test1@gmail.com").roomId(1).build());
@@ -42,4 +50,5 @@ public class EmailReader implements ItemReader<List<EmailContent>> {
         this.list = new ArrayList<>(collect.values());
         System.out.println("before read step");
     }
+
 }

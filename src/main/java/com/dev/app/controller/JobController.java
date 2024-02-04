@@ -26,6 +26,7 @@ public class JobController {
     public String getJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
+                .addString("emailType","my-email-type")
                 .toJobParameters();
 
         jobLauncher.run(emailJob, jobParameters);
